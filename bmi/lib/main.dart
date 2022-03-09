@@ -1,3 +1,4 @@
+import 'package:bmi/models/bmi.dart';
 import 'package:bmi/score.dart';
 import 'package:flutter/material.dart';
 
@@ -33,7 +34,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   final _formKey = GlobalKey<FormState>();
   var isUserNormal = true;
-  var score = 0;
+  BMI score = 0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -50,7 +51,6 @@ class _MyHomePageState extends State<MyHomePage> {
                     labelText: 'Mass [' + (isUserNormal ? 'kg' : 'fn') + ']',
                   ),
                   keyboardType: TextInputType.number,
-                  // The validator receives the text that the user has entered.
                   validator: (value) {
                     if (value == null ||
                         value.isEmpty ||
@@ -79,17 +79,12 @@ class _MyHomePageState extends State<MyHomePage> {
                   padding: const EdgeInsets.symmetric(vertical: 16.0),
                   child: ElevatedButton(
                     onPressed: () {
-                      // Validate returns true if the form is valid, or false otherwise.
                       if (_formKey.currentState!.validate()) {
-                        // If the form is valid, display a snackbar. In the real world,
-                        // you'd often call a server or save the information in a database.
-                       
+                        //score = BMI(, weight)
                         Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (context) => const Score(),
-                            // Pass the arguments as part of the RouteSettings. The
-                            // DetailScreen reads the arguments from these settings.
                             settings: RouteSettings(arguments: score),
                           ),
                         );
