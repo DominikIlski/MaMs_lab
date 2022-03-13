@@ -15,7 +15,7 @@ class ScoreScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Text(score.count(), style: TextStyle(color: bmiData.color),),
+            Text( score.count(),key: const Key('score'), style: TextStyle(color: bmiData.color),),
             Text(bmiData.category,),
           ],
         ),

@@ -93,6 +93,7 @@ class _MyHomePageState extends State<MyHomePage> {
             child: Column(
               children: [
                 TextFormField(
+                  key: const Key('mass_input'),
                   decoration: InputDecoration(
                     border: const UnderlineInputBorder(),
                     labelText: 'Mass [' + (isUserNormal ? 'kg' : 'lb') + ']',
@@ -103,6 +104,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       weight = double.parse(value!.replaceAll(',', '.')),
                 ),
                 TextFormField(
+                  key: const Key('height_input'),
                   decoration: InputDecoration(
                     border: const UnderlineInputBorder(),
                     labelText: 'Height [' + (isUserNormal ? 'cm' : 'in') + ']',
@@ -115,6 +117,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 16.0),
                   child: ElevatedButton(
+                    key: const Key('submit'),
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
                         _formKey.currentState!.save();
