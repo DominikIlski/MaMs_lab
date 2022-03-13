@@ -30,6 +30,15 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  String? validator(value) {
+    if (value == null ||
+        value.isEmpty ||
+        double.parse(value!.replaceAll(',', '.')) < 0) {
+      return 'Please enter value bigger than 0';
+    }
+    return null;
+  }
+
   final _formKey = GlobalKey<FormState>();
 
   void handleClick(String value) {
@@ -56,8 +65,8 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   var isUserNormal = true;
-  double weight = 77;
-  double height = 180;
+  double weight = 0;
+  double height = 0;
   BMI? score;
   @override
   Widget build(BuildContext context) {
@@ -68,8 +77,8 @@ class _MyHomePageState extends State<MyHomePage> {
             PopupMenuButton<String>(
               onSelected: handleClick,
               itemBuilder: (BuildContext context) {
-                var value = isUserNormal ? 'Imperial' : 'Metrics';
-                return {value, 'Info'}.map((String choice) {
+                var units = isUserNormal ? 'Imperial' : 'Metrics';
+                return {units, 'Info'}.map((String choice) {
                   return PopupMenuItem<String>(
                     value: choice,
                     child: Text(choice),
@@ -85,35 +94,23 @@ class _MyHomePageState extends State<MyHomePage> {
               children: [
                 TextFormField(
                   decoration: InputDecoration(
-                    border: UnderlineInputBorder(),
+                    border: const UnderlineInputBorder(),
                     labelText: 'Mass [' + (isUserNormal ? 'kg' : 'lb') + ']',
                   ),
                   keyboardType: TextInputType.number,
-                  validator: (value) {
-                    if (value == null ||
-                        value.isEmpty ||
-                        int.parse(value) < 0) {
-                      return 'Please enter value bigger than 0';
-                    }
-                    return null;
-                  },
-                  onSaved: (value) => weight = double.parse(value!),
+                  validator: validator,
+                  onSaved: (value) =>
+                      weight = double.parse(value!.replaceAll(',', '.')),
                 ),
                 TextFormField(
                   decoration: InputDecoration(
-                    border: UnderlineInputBorder(),
+                    border: const UnderlineInputBorder(),
                     labelText: 'Height [' + (isUserNormal ? 'cm' : 'in') + ']',
                   ),
                   keyboardType: TextInputType.number,
-                  validator: (value) {
-                    if (value == null ||
-                        value.isEmpty ||
-                        int.parse(value) < 0) {
-                      return 'Please enter value bigger than 0';
-                    }
-                    return null;
-                  },
-                  onSaved: (value) => height = double.parse(value!),
+                  validator: validator,
+                  onSaved: (value) =>
+                      height = double.parse(value!.replaceAll(',', '.')),
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 16.0),

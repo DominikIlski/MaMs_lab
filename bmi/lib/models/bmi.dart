@@ -6,20 +6,23 @@ class BMI {
   bool isUserNormal;
   BMI(this.height, this.weight, {this.isUserNormal = true});
 
-  double count() {
-    return this.weight / (this.height * this.height) * (isUserNormal ? 10000 : 703);
+  String count() {
+    var score = this.weight /
+        (this.height * this.height) *
+        (isUserNormal ? 10000 : 703);
+    return score.toStringAsFixed(2);
   }
 
   BmiData categorise() {
     var bmi = this.count();
     BmiData value = BmiData('error', Colors.purpleAccent);
-    if (bmi < 18.49) {
+    if (double.parse(bmi) < 18.49) {
       value = BmiData('Underweight', Colors.blue);
     }
-    if (bmi >= 18.5 && bmi <= 24.99) {
+    if (double.parse(bmi) >= 18.5 && double.parse(bmi) <= 24.99) {
       value = BmiData('Normal range', Colors.green);
     }
-    if (bmi >= 25) {
+    if (double.parse(bmi) >= 25) {
       value = BmiData('Overweight', Colors.red);
     }
     return value;
