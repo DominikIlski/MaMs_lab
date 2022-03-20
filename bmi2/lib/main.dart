@@ -2,17 +2,9 @@ import 'package:bmi/info.dart';
 import 'package:bmi/models/bmi.dart';
 import 'package:bmi/score.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 void main() {
-
-
-
-  runApp(
-    PrividerScope(
-      child: const MyApp()
-    )
-
-  );
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
