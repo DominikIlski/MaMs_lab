@@ -1,10 +1,13 @@
 import 'package:bmi/info.dart';
 import 'package:bmi/models/bmi.dart';
+import 'package:bmi/providers/bmi_provider.dart';
 import 'package:bmi/score.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 
 void main() {
-  runApp(const MyApp());
+  runApp(const ProviderScope(child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -22,14 +25,18 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class MyHomePage extends StatefulWidget {
+final bmiRecordsProvider = StateNotifierProvider<BmiRecords, List<BMI>>((ref) {
+  
+})
+
+class MyHomePage extends ConsumerStatefulWidget {
   const MyHomePage();
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  _MyHomePageState createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _MyHomePageState extends ConsumerState<MyHomePage> {
   String? validator(value) {
     if (value == null ||
         value.isEmpty ||
@@ -67,9 +74,9 @@ class _MyHomePageState extends State<MyHomePage> {
   var isUserNormal = true;
   double weight = 0;
   double height = 0;
-  BMI? score;
   @override
   Widget build(BuildContext context) {
+   final bmiController = ref.watch(bmiProvider);
     return Scaffold(
         appBar: AppBar(
           title: const Text('BMI counter'),
