@@ -30,6 +30,12 @@ class BMI {
     }
     return value;
   }
+  static List<String> toListString(String string) {
+    return string.split(',');
+  }
+  @override
+  String toString() => '$id,$height,$weight,$isUserNormal';
+  
 }
 
 @immutable

@@ -1,22 +1,35 @@
-import 'package:bmi/models/bmi.dart';
+import 'package:bmi/providers/providers.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'models/bmi.dart';
 
-class ScoreScreen extends StatelessWidget {
-  const ScoreScreen({ Key? key }) : super(key: key);
+class ScoreScreen extends ConsumerWidget {
+  const ScoreScreen({Key? key}) : super(key: key);
   @override
-  Widget build(BuildContext context) {
-    final score = ModalRoute.of(context)!.settings.arguments as BMI;
-    final bmiData = score.categorise();
+  Widget build(BuildContext context, WidgetRef ref) {
+    final scores = ref.watch(bmiListProvider);
+    BMI? score;
+    BmiData? bmiData;
+    if (scores.isNotEmpty) {
+      score = scores.last;
+      bmiData = score.categorise();
+    }
     return Scaffold(
-      body: Container(
+      body: SizedBox(
         width: double.infinity,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Text( score.count(),key: const Key('score'), style: TextStyle(color: bmiData.color),),
-            Text(bmiData.category,),
+            Text(
+              score?.count() ?? 'error',
+              key: const Key('score'),
+              style: TextStyle(color: bmiData?.color ?? Colors.black),
+            ),
+            Text(
+              bmiData?.category ?? 'error, pleas try again',
+            ),
           ],
         ),
       ),

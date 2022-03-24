@@ -1,10 +1,12 @@
+import 'package:bmi/history.dart';
 import 'package:bmi/info.dart';
 import 'package:bmi/models/bmi.dart';
 import 'package:bmi/providers/bmi_provider.dart';
+import 'package:bmi/providers/providers.dart';
 import 'package:bmi/score.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   runApp(const ProviderScope(child: MyApp()));
@@ -24,10 +26,6 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
-final bmiRecordsProvider = StateNotifierProvider<BmiRecords, List<BMI>>((ref) {
-  
-})
 
 class MyHomePage extends ConsumerStatefulWidget {
   const MyHomePage();
@@ -68,6 +66,14 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
           ),
         );
         break;
+      case 'History':
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const Hisotry(),
+          ),
+        );
+        break;
     }
   }
 
@@ -76,7 +82,6 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
   double height = 0;
   @override
   Widget build(BuildContext context) {
-   final bmiController = ref.watch(bmiProvider);
     return Scaffold(
         appBar: AppBar(
           title: const Text('BMI counter'),
@@ -85,7 +90,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
               onSelected: handleClick,
               itemBuilder: (BuildContext context) {
                 var units = isUserNormal ? 'Imperial' : 'Metrics';
-                return {units, 'Info'}.map((String choice) {
+                return {units, 'Info', 'History'}.map((String choice) {
                   return PopupMenuItem<String>(
                     value: choice,
                     child: Text(choice),
@@ -125,15 +130,24 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
                   padding: const EdgeInsets.symmetric(vertical: 16.0),
                   child: ElevatedButton(
                     key: const Key('submit'),
-                    onPressed: () {
+                    onPressed: () async {
+                      final bmiRecords = ref.read(bmiListProvider.notifier);
+
                       if (_formKey.currentState!.validate()) {
                         _formKey.currentState!.save();
-                        score = BMI(height, weight, isUserNormal: isUserNormal);
+                        print(isUserNormal);
+                        bmiRecords.add(height, weight, isUserNormal);
+                        var instance =
+                            ref.read(sharedPreferencessProvider).asData!.value!;
+                        var currentList = instance.getStringList('bmi');
+                        await instance.setStringList('bmi', [
+                          ...currentList ?? [],
+                          bmiRecords.list.last.toString()
+                        ]);
                         Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (context) => const ScoreScreen(),
-                            settings: RouteSettings(arguments: score),
                           ),
                         );
                       }
