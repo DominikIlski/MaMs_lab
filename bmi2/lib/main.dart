@@ -45,7 +45,6 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
   }
 
   final _formKey = GlobalKey<FormState>();
-
   void handleClick(String value) {
     switch (value) {
       case 'Metrics':
@@ -82,6 +81,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
   double height = 0;
   @override
   Widget build(BuildContext context) {
+    ref.watch(sharedPreferencessProvider);
     return Scaffold(
         appBar: AppBar(
           title: const Text('BMI counter'),
@@ -135,7 +135,6 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
 
                       if (_formKey.currentState!.validate()) {
                         _formKey.currentState!.save();
-                        print(isUserNormal);
                         bmiRecords.add(height, weight, isUserNormal);
                         var instance =
                             ref.read(sharedPreferencessProvider).asData!.value!;
