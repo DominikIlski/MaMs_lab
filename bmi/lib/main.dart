@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage();
+  const MyHomePage({Key? key}) : super(key: key);
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -37,6 +37,36 @@ class _MyHomePageState extends State<MyHomePage> {
       return 'Please enter value bigger than 0';
     }
     return null;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    debugPrint('init');
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    debugPrint('didChanged');
+  }
+
+  @override
+  void didUpdateWidget(covariant MyHomePage oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    debugPrint('didUpdate');
+  }
+
+  @override
+  void deactivate() {
+    super.deactivate();
+    debugPrint('deactivated');
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    debugPrint('dispose');
   }
 
   final _formKey = GlobalKey<FormState>();
@@ -70,6 +100,8 @@ class _MyHomePageState extends State<MyHomePage> {
   BMI? score;
   @override
   Widget build(BuildContext context) {
+    debugPrint('build');
+
     return Scaffold(
         appBar: AppBar(
           title: const Text('BMI counter'),
