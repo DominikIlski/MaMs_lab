@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod/riverpod.dart';
+import 'package:task_manager/screens/task_add.dart';
 
 import 'models/task.dart';
 
@@ -57,12 +58,15 @@ class Home extends ConsumerWidget {
       appBar: AppBar(
         title: const Text('Todos'),
         actions: <Widget>[
-          GestureDetector(
-            child: const Icon(
-              Icons.add,
-            ),
-            onTap: () => print('test'),
-          )
+          IconButton(
+              onPressed: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const AddTaskScreen()),
+                  ),
+              icon: const Icon(
+                Icons.add,
+              ))
         ],
       ),
       body: Column(
@@ -80,5 +84,3 @@ class Home extends ConsumerWidget {
     );
   }
 }
-
-
