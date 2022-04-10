@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:form_builder_validators/form_builder_validators.dart';
+import 'package:task_manager/models/task.dart';
+import 'package:task_manager/providers.dart';
 
 class AddTaskScreen extends ConsumerStatefulWidget {
   const AddTaskScreen({Key? key}) : super(key: key);
@@ -9,116 +13,88 @@ class AddTaskScreen extends ConsumerStatefulWidget {
 }
 
 class _AddTaskScreenState extends ConsumerState<AddTaskScreen> {
-  int _selectedIndex = 0;
-  bool complete = false;
-  DateTime selectedDate = DateTime.now();
-
-  final _formKey = GlobalKey<FormState>();
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
-
-  Future<Null> _selectDate(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
-        context: context,
-        initialDate: selectedDate,
-        firstDate: DateTime(2015, 8),
-        lastDate: DateTime(2101));
-    if (picked != null && picked != selectedDate)
-      setState(() {
-        selectedDate = picked;
-      });
-  }
-
+  final _formKey = GlobalKey<FormBuilderState>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Add task')),
       body: SingleChildScrollView(
           child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: [
-              TextFormField(
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  hintText: 'Title',
+              padding: const EdgeInsets.all(8.0),
+              child: FormBuilder(
+                key: _formKey,
+                child: Column(
+                  children: [
+                    FormBuilderChoiceChip(
+                        initialValue: TaskType.email,
+                        autovalidateMode: AutovalidateMode.always,
+                        validator: FormBuilderValidators.required(
+                            errorText:
+                                'There should be at least one selected.'),
+                        name: 'type',
+                        runSpacing: 5,
+                        selectedColor: Colors.blueAccent,
+                        backgroundColor: Colors.transparent,
+                        alignment: WrapAlignment.spaceEvenly,
+                        options: const [
+                          FormBuilderFieldOption(
+                            value: TaskType.email,
+                            child: Icon(Icons.email),
+                          ),
+                          FormBuilderFieldOption(
+                            value: TaskType.phone,
+                            child: Icon(Icons.phone),
+                          ),
+                          FormBuilderFieldOption(
+                            value: TaskType.todo,
+                            child: Icon(Icons.task_alt_outlined),
+                          ),
+                          FormBuilderFieldOption(
+                            value: TaskType.meeting,
+                            child: Icon(Icons.meeting_room_outlined),
+                          ),
+                        ]),
+                    const SizedBox(height: 20),
+                    FormBuilderTextField(
+                      autovalidateMode: AutovalidateMode.disabled,
+                      name: 'title',
+                      decoration: const InputDecoration(
+                        labelText: 'title',
+                        border: OutlineInputBorder(),
+                      ),
+                      validator: FormBuilderValidators.required(),
+                    ),
+                    const SizedBox(height: 20),
+                    FormBuilderTextField(
+                        name: 'desc',
+                        decoration: const InputDecoration(
+                            labelText: 'Description',
+                            border: OutlineInputBorder())),
+                    const SizedBox(height: 20),
+                    FormBuilderDateTimePicker(
+                        name: 'date',
+                        initialValue: DateTime.now(),
+                        inputType: InputType.date),
+                    const SizedBox(height: 20),
+                    FormBuilderCheckbox(
+                        name: 'completed', title: const Text('Completed')),
+                    ElevatedButton(
+                        onPressed: () {
+                          _formKey.currentState!.save();
+                          if (_formKey.currentState?.validate() ?? false) {
+                            var value = _formKey.currentState!.value;
+                            ref.read(todoListProvider.notifier).add(
+                                title: value['title'],
+                                description: value['desc'],
+                                dueDate: value['date'],
+                                taskType: value['type']);
+                            _formKey.currentState!.reset();
+                          } else {}
+                        },
+                        child: const Text('Submit'))
+                  ],
                 ),
-              ),
-              SizedBox(
-                height: 20.0,
-              ),
-              TextFormField(
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  hintText: 'Desc',
-                ),
-              ),
-              SizedBox(
-                height: 20.0,
-              ),
-              Row(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text("${selectedDate.toLocal()}".split(' ')[0]),
-                  SizedBox(
-                    width: 20.0,
-                  ),
-                  ElevatedButton(
-                    onPressed: () => _selectDate(context),
-                    child: Text('Select date'),
-                  )
-                ],
-              ),
-              SizedBox(
-                height: 20.0,
-              ),
-              Row(
-                children: [
-                  Checkbox(
-                      value: complete,
-                      onChanged: (value) {
-                        setState(() => complete = value ?? false);
-                      }),
-                  SizedBox(
-                    width: 4,
-                  ),
-                  Text('Completed')
-                ],
-              )
-            ],
-          ),
-        ),
-      )),
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Colors.blueAccent,
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.email),
-            label: 'Email',
-            backgroundColor: Colors.blueAccent,
-          ),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.phone),
-              backgroundColor: Colors.blueAccent,
-              label: 'Phone'),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.task_alt_outlined),
-              backgroundColor: Colors.blueAccent,
-              label: 'ToDo'),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.meeting_room_outlined),
-              backgroundColor: Colors.blueAccent,
-              label: 'Meeting'),
-        ],
-        currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
-      ),
+              ))),
     );
   }
 }
