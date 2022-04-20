@@ -87,9 +87,22 @@ class _AddTaskScreenState extends ConsumerState<AddTaskScreen> {
                                 title: value['title'],
                                 description: value['desc'],
                                 dueDate: value['date'],
-                                taskType: value['type']);
+                                taskType: value['type'],
+                                completed: value['completed']);
                             _formKey.currentState!.reset();
-                          } else {}
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(const SnackBar(
+                              content: Text('Task added :)'),
+                              duration: Duration(seconds: 1),
+                            ));
+                          } else {
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(const SnackBar(
+                              content:
+                                  Text('There was an error please try again'),
+                              duration: Duration(seconds: 3),
+                            ));
+                          }
                         },
                         child: const Text('Submit'))
                   ],

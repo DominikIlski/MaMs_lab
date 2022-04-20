@@ -57,7 +57,6 @@ class Home extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final todos = ref.watch(todoListProvider);
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Todos'),
@@ -78,8 +77,81 @@ class Home extends ConsumerWidget {
           Expanded(
             child: todos.isNotEmpty
                 ? ListView.builder(
-                  itemCount: todos.length,
-                    itemBuilder: (ctx, index) => Text(todos[index].title))
+                    itemCount: todos.length,
+                    itemBuilder: (ctx, index) => Dismissible(
+                          confirmDismiss: (direction) async {
+                            if (direction == DismissDirection.startToEnd) {
+                              /// edit item
+                              return true;
+                            } else if (direction ==
+                                DismissDirection.endToStart) {
+                              ref
+                                  .read(todoListProvider.notifier)
+                                  .toggle(todos[index].id);
+                              return false;
+                            }
+                          },
+                          key: Key(todos[index].id),
+                          secondaryBackground: Container(
+                            width: 50,
+                            alignment: Alignment.centerRight,
+                            color: Colors.green,
+                            child: const Icon(Icons.check),
+                            margin: const EdgeInsets.symmetric(vertical: 8),
+                          ),
+                          background: Container(
+                            width: 50,
+                            alignment: Alignment.centerLeft,
+                            color: Colors.red,
+                            child: const Icon(Icons.delete),
+                            margin: const EdgeInsets.symmetric(vertical: 8),
+                          ),
+                          child: SizedBox(
+                            width: double.infinity,
+                            child: Card(
+                              child: Padding(
+                                  padding: const EdgeInsets.all(8),
+                                  child: Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        Expanded(
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(todos[index].title),
+                                              const SizedBox(
+                                                height: 5,
+                                              ),
+                                              Text(todos[index].description ??
+                                                  ''),
+                                            ],
+                                          ),
+                                        ),
+                                        if (todos[index].dueDate != null)
+                                          Text(
+                                              '${todos[index].dueDate!.day}-${todos[index].dueDate!.month}-${todos[index].dueDate!.year}'),
+                                        SizedBox(
+                                          width: 5,
+                                        ),
+                                        Icon(todos[index].iconBasedOnType),
+                                        Checkbox(
+                                            value: todos[index].completed,
+                                            fillColor:
+                                                MaterialStateProperty.all(
+                                                    Colors.green),
+                                            onChanged: null)
+                                      ])),
+                              margin: const EdgeInsets.symmetric(vertical: 8),
+                            ),
+                          ),
+                          onDismissed: (direction) {
+                            ref
+                                .read(todoListProvider.notifier)
+                                .remove(todos[index]);
+                          },
+                        ))
                 : const Center(
                     child: Text('There are no tasks yet'),
                   ),

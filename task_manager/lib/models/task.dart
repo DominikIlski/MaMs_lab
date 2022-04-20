@@ -53,16 +53,17 @@ class TaskList extends StateNotifier<List<Task>> {
       {String? description,
       required String title,
       DateTime? dueDate,
-      TaskType? taskType}) {
+      TaskType? taskType,
+      bool completed = false}) {
     state = [
       ...state,
       Task(
-        dueDate: dueDate,
-        title: title,
-        taskType: taskType,
-        id: _uuid.v4(),
-        description: description,
-      ),
+          dueDate: dueDate,
+          title: title,
+          taskType: taskType,
+          id: _uuid.v4(),
+          description: description,
+          completed: completed),
     ];
   }
 
