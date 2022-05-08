@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "840798018917",
+    "project_id": "mams-947df",
+    "storage_bucket": "mams-947df.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:840798018917:android:8c7aa6b091c5aca639d58c",
+        "android_client_info": {
+          "package_name": "pl.edu.pwr.lab3.i242349.ml_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "840798018917-4lehgpt9p0gljcmuuj1f356ojsm4nmqe.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBMSUQ2WG4cVXTw0JhmOXLOexLjKmqk5s0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "840798018917-4lehgpt9p0gljcmuuj1f356ojsm4nmqe.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
